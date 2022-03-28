@@ -1,0 +1,7 @@
+
+p	java:S116"[Rename this field "COUNT_OF_NUMBERS" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(‰´‰
+7
+java:S1170"!Make this final field static too.(‰´‰
+G
+java:S1602/",Remove useless curly braces around statement(ÙãØúÿÿÿÿ
+s	java:S135"YReduce the total number of break and continue statements in this loop to use at most one.(˜ïˆÿÿÿÿÿ
