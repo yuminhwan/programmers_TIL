@@ -1,0 +1,163 @@
+## MySQL 
+
+- 관계형 데이터베이스 
+- MariaDB는 오픈소스이다. 
+
+
+
+### 용량 증대 (Scaling) 방식 
+
+- Scale -Up : 서버에 CPU와 Memory 추가
+  - 정말 필요한 데이터가 있는지를 잘 체크해야 한다. 
+- Scale-Out : Master - Slave 구성 
+  - 일반적으로 클러스터 구성을 이야기 하나 MySQL은 이를 지원하지 못해 Master-slave 구조로 구성한다. 
+  - Master에서 Slave에 읽기 전용으로 데이터를 복사한다. 
+  - 읽기 같은 경우만 더 큰 용량을 지원하고 쓰기는 Master에 해야하기 때문에 MySQL 자체가 처리할 수 있는 크기가 커지는 것은 아니다.
+
+
+
+## 클라우드 
+
+컴퓨터 자원을 네트윅을 통해 서비스 형태로 제공한다. 
+
+만약 클라우드 컴퓨팅이 없다면 서버, 네트윅의 구매부터 설정까지 직접 수행해야하고 공간의 제약도 있다. 또한, Peak time을 기준으로 Capacity planning을 해야한다. (트래픽에 맞춰 디자인 및 구매를 하였는 데 이후에 트래픽이 줄어든다면 ...? )
+
+### 장점 
+
+- 초기 투자 비용이 크게 줄어든다. 
+  - CAPEX(Capital Expenditure) : 초기 투자 비용 지불 
+  - OPEX(Operating Expense) : 매달 비용 지불 
+- 서버, 네트윅 등 구매부터 설정까지 하지 않아도 되니 시간이 대폭 감소한다. 
+- 서버를 증감하거나 감소시킬 수 있으니 노는 리소스 제거하여 비용을 감소시킬 수 있다.
+- 글로벌 확장에 용이하고 소프트웨어 개발 시간이 단축된다. (Managed Service (SaaS) 이용)
+
+
+
+### AWS 
+
+- EC2 - Elastic Cloud Compute 
+  - 서버 호스팅 서비스 
+- S3 - Simple Storage Service 
+  - 대용량 클라우드 스토리지 서비스 
+  - 디렉토리를 버킷(Bucket)이라고 부른다.
+- 외에도 여러 서비스 제공
+
+
+
+## Docker 
+
+MySQL을 다른 OS에서 설치하려면 여러 변수가 존재한다. 즉, 설치 과정이 OS와 OS의 버전에 따라 달라지게 되고 프로그램 간의 충돌이 발생할 수 있다. 
+
+이런 문제점을 해결해주는 것이 Docker이다. 
+
+Docker는 특정 프로그램과 기타 필요한 소프트웨어들을 하나의 패키지로 만듬으로써 해당 프로그램의 개발과 사용을 도와주는 오픈소스 플랫폼이다. 
+
+- Docker Image 
+
+  - 하나의 패키지를 부르는 이름
+  - Image는 공유 가능하다.
+
+- Docker Registry(Docker Hub)
+
+  - Docker Image 공유소이다.
+
+- Docker Container 
+
+  - Image를 실행시킨 것으로 응용프로그램에 해당한다.
+
+    
+
+### Virtualization vs Containerization 
+
+Docker가 추구하는 바는 `Virtualiztion`이 아닌 `Containerization`이다.
+
+이미지가 컨테이너화되어서 컨테이너 안에서 프로그램이 돌아가는 형태이다.
+
+`Docker Engine` 위에 `Docker Container`가 있고 거기 안에서 프로그램이 돌아감.
+
+
+
+## SQL DDL
+
+### 웹 서비스 사용자/세션 정보 
+
+- 사용자 ID : 등록된 사용자마다 부여하는 **유일한** ID
+- 세션 ID : 세션마다 부여 되는 ID 
+  - 이것으로 사용자의 방문을 식별한다. 
+- 세션 : 사용자의 방문을 논리적인 단위로 나눈것
+  - 사용자가 외부 링크를 타고 들어오거나 직접 들어올 경우 세션이 생성된다. 
+    - 이미 접속해 있었더라도 이 경우 세션이 생성된다.
+  - 사용자가 방문 후 30분간 interaction이 없다가 뭔가를 하는 경우 세션이 생성된다. 
+    - 시간 기준 
+
+세션의 경우 세션을 만들어낸 접점(경유지)를 채널이란 이름으로 기록해둔다. 만약 페이지에 들어오기 전 광고가 있던 곳이 구글이라면 구글 검색이 접점이 되고 구글 채널이라고 기록되는 것이다. 이를 통해 마케팅 관련 기여도 분석을 할 수 있다.
+
+
+
+### 테이블 필드의 중요 속성
+
+- PRIMARY KEY
+  - 테이블에서 레코드의 유일성을 정의하는 필드이다. 
+  - 한 필드만 해당되지 않고 여러 필드를 모아 PRIMARY KEY로 만들 수 있다.
+    - 두 개 이상의 필드로 정의되는 경우 `Composite primary key`라고 한다.
+  - 중복된 값을 갖는 레코드가 생기는 것을 방지한다. (유일성 보장)
+- Foreign key 
+  - 해당 컬럼은 다른 테이블의 컬럼에 기반한다는 것이다.
+  - 연관함으로써 데이터의 정합성이 좋아진다.
+    - 데이터 정합성이란, 어떤 데이들의 값이 서로 일치함을 뜻한다.
+- NOT NULL 
+  - 해당 필드의 값이 항상 존재해야 하는 경우
+- DEFAULT value 
+  - 기본값을 정의한다. 
+  - `timestamp`타입의 경우 `current_timestamp`를 사용하면 현재 시간으로 기본값이 설정된다.
+
+### 
+
+### channel 테이블 
+
+| 컬럼    | 타입        | 속성                                        |
+| ------- | ----------- | ------------------------------------------- |
+| id      | int         | NOT NULL <br>AUTO_INCREMENT <br>PRIMARY KEY |
+| channel | varchar(32) | NOT NULL                                    |
+
+```sql
+CREATE TABLE channel (
+id int not null auto_increment primary key, 
+channel varchar(32) not null
+);
+```
+
+위와 같이 사용할 순 있지만 `composite primary key`를 정의할 수 없다. 그래서 정의할 수 있도록 아래 처럼 작성한다. (더 범용적이다.)
+
+```sql
+CREATE TABLE channel (
+id int not null auto_increment, 
+channel varchar(32) not null,
+primary key(id)
+);
+```
+
+- AUTO_INCREMENT
+
+
+
+### session 테이블 
+
+| 컬럼       | 타입      | 속성                                      |
+| ---------- | --------- | ----------------------------------------- |
+| id         | int       | NOT NULL<br>AUTO_INCREMENT<br>PRIMARY KEY |
+| user_id    | int       | NOT NULL                                  |
+| created    | timestamp | NOT NULL<br/> DEFAULT CURRENT_TIMESTAMP   |
+| channel_id | int       | NOT NULL<br>FOREIGN KEY                   |
+
+```sql
+CREATE TABLE session (
+id int not null auto_increment primary key,
+user_id int not null,
+created timestamp not null default current_timestamp, channel_id int not null,
+foreign key(channel_id) references channel(id)
+);
+```
+
+- `foreign key(연관될 컬럼명) references 연관지을 테이블(연관지을 테이블의 컬럼명)`
+
